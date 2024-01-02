@@ -16,8 +16,8 @@ void zRenderer_Init()
 
   zRenderer.drawWorldBackdrop = zTrue;
 
-  zRenderer.wipeColor = COLOR_BLACK;
-  zRenderer.playerColor = COLOR_BLUE;
+  zRenderer.wipeColor = 0x0000;
+  zRenderer.playerColor = 0x001F; // blue
 
   // TODO: this should probably be done somewhere else, when we get loading working properly.
   zLcdScreen_FillRect( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, zRenderer.wipeColor );

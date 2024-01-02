@@ -6,16 +6,6 @@
 #define SCREEN_WIDTH        320
 #define SCREEN_HEIGHT       480
 
-// MUFFINS: what actually uses these?
-#define COLOR_BLACK         0x0000
-#define COLOR_BLUE          0x001F
-#define COLOR_RED           0xF800
-#define COLOR_GREEN         0x07E0
-#define COLOR_CYAN          0x07FF
-#define COLOR_MAGENTA       0xF81F
-#define COLOR_YELLOW        0xFFE0
-#define COLOR_WHITE         0xFFFF
-
 #define PIN_ANALOG_X        A8
 #define PIN_ANALOG_Y        A9
 #define PIN_SELECT_BUTTON   52
