@@ -1,3 +1,6 @@
+#if !defined( LCD_REGISTERS_H )
+#define LCD_REGISTERS_H
+
 // Register names from Peter Barrett's Microtouch code
 #define ILI932X_START_OSC          0x00
 #define ILI932X_DRIV_OUT_CTRL      0x01
@@ -183,3 +186,5 @@
 #define HX8357B_MADCTL_RGB 0x00
 #define HX8357B_MADCTL_BGR 0x08
 #define HX8357B_MADCTL_MH  0x04
+
+#endif // LCD_REGISTERS_H
