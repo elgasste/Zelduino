@@ -15,14 +15,15 @@
 
 #define GAME_FPS            30
 
+#define PALETTE_COLORS      16
+
+#define WORLD_TILE_SIZE     16
 #define WORLD_TILES_X       16
 #define WORLD_TILES_Y       11
-#define WORLD_TILE_SIZE     16
+#define WORLD_TILE_TEXTURES 7   // TODO: can we inject this automatically?
+
 #define WORLD_OFFSET_X      32
 #define WORLD_OFFSET_Y      64
-
-#define PALETTE_COLORS      16
-#define WORLD_TILE_TEXTURES 8
 
 #define PLAYER_MAX_VELOCITY 70 // pixels per second
 

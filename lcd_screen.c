@@ -156,7 +156,7 @@ void zLcdScreen_DrawWorldTile( zWorldTile_t* tile, int16_t x, int16_t y )
   {
     for( uint16_t textureCol = textureOffset; textureCol < textureOffset + ( WORLD_TILE_SIZE / 2 ); textureCol++ )
     {
-      uint8_t texturePair = zGame.textureMap[( h * ( ( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_TEXTURES ) ) + textureCol];
+      uint8_t texturePair = zGame.worldTextureMap[( h * ( ( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_TEXTURES ) ) + textureCol];
 
       writeData16( zGame.palette[texturePair >> 2] );
       writeData16( zGame.palette[texturePair & 0x3] );
