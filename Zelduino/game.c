@@ -10,7 +10,8 @@ void zGame_Init()
 {
   zGame_LoadData();
 
-  zGame.playerHitBox.x = ( WORLD_TILES_X / 2 ) * WORLD_TILE_SIZE;
+  // TODO: this should be part of data_loaderc at some point
+  zGame.playerHitBox.x = ( ( WORLD_TILES_X / 2 ) - 3 ) * WORLD_TILE_SIZE;
   zGame.playerHitBox.y = ( WORLD_TILES_Y / 2 ) * WORLD_TILE_SIZE;
   zGame.playerHitBox.w = 12;
   zGame.playerHitBox.h = 12;
