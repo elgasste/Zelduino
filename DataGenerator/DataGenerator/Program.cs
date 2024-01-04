@@ -34,7 +34,8 @@ int[] _worldMapPassable =
 };
 
 var _palette = new List<UInt16>();
-var _textureMap = new List<byte>();
+var _worldTextureMap = new List<byte>();
+var _playerTextureMap = new List<byte>();
 
 Console.WriteLine();
 Console.WriteLine( "=====================================================" );
@@ -42,23 +43,19 @@ Console.WriteLine( "               ZELDUINO DATA GENERATOR" );
 Console.WriteLine( "=====================================================" );
 Console.WriteLine();
 
-static void BitmapSanityCheck( BitmapSource bitmap )
+void BitmapSanityCheck( BitmapSource bitmap )
 {
    if ( bitmap.Format != PixelFormats.Indexed8 )
    {
       throw new Exception( "Expecting image pixel format to be Indexed8" );
    }
-   else if ( bitmap.Palette.Colors.Count > 15 )
-   {
-      throw new Exception( "Too many colors found in image palette" );
-   }
    else if ( bitmap.PixelWidth <= 0 || bitmap.PixelWidth % 16 != 0 )
    {
       throw new Exception( "Image width should be a multiple of 16" );
    }
-   else if ( bitmap.PixelHeight != 16 )
+   else if ( bitmap.PixelHeight <= 0 || bitmap.PixelWidth % 16 != 0 )
    {
-      throw new Exception( "Image height should be exactly 16" );
+      throw new Exception( "Image height should be a multiple of 16" );
    }
 }
 
@@ -80,6 +77,7 @@ static UInt16 GetPixelColor( BitmapSource bitmap, int x, int y )
 
    bitmap.CopyPixels( rect, pixel, stride, 0 );
    var color = bitmap.Palette.Colors[pixel[0]];
+
    return ColortoUInt16( color );
 }
 
@@ -87,7 +85,11 @@ int PaletteIndexFromColor( UInt16 color )
 {
    if ( _palette is null )
    {
-      return 0;
+      throw new Exception( "Somehow the palette is null, no idea how it happened." );
+   }
+   else if ( _palette.Count > 15 )
+   {
+      throw new Exception( "Trying to add too many colors to the palette." );
    }
 
    int paletteIndex = _palette.IndexOf( color );
@@ -101,11 +103,11 @@ int PaletteIndexFromColor( UInt16 color )
    return paletteIndex;
 }
 
-void LoadTextureMap( BitmapSource bitmap )
+void LoadWorldTextureMap( BitmapSource bitmap )
 {
-   if ( _textureMap is null )
+   if ( _worldTextureMap is null )
    {
-      throw new Exception( "Somehow the texture map is null, no idea how it happened." );
+      throw new Exception( "Somehow the world texture map is null, no idea how it happened." );
    }
 
    for ( int row = 0; row < bitmap.PixelHeight; row++ )
@@ -113,20 +115,41 @@ void LoadTextureMap( BitmapSource bitmap )
       for ( int col = 0; col < bitmap.PixelWidth; col++ )
       {
          var pixelColor = GetPixelColor( bitmap, col, row );
-         _textureMap.Add( (byte)PaletteIndexFromColor(pixelColor) );
+         _worldTextureMap.Add( (byte)PaletteIndexFromColor( pixelColor ) );
       }
    }
 }
 
-string BuildTexturesOutputString( BitmapSource bitmap )
+void LoadPlayerTextureMap( BitmapSource bitmap )
+{
+   if ( _playerTextureMap is null )
+   {
+      throw new Exception( "Somehow the player texture map is null, no idea how it happened." );
+   }
+
+   for ( int row = 0; row < bitmap.PixelHeight; row++ )
+   {
+      for ( int col = 0; col < bitmap.PixelWidth; col++ )
+      {
+         var pixelColor = GetPixelColor( bitmap, col, row );
+         _playerTextureMap.Add( (byte)PaletteIndexFromColor( pixelColor ) );
+      }
+   }
+}
+
+string BuildPaletteAndTexturesOutputString()
 {
    if ( _palette is null )
    {
       throw new Exception( "Somehow the palette is null, I have no idea what could have happened." );
    }
-   else if ( _textureMap is null )
+   else if ( _worldTextureMap is null )
    {
-      throw new Exception( "Somehow the texture map is null, I have no idea what went wrong." );
+      throw new Exception( "Somehow the world texture map is null, I have no idea what went wrong." );
+   }
+   else if ( _playerTextureMap is null )
+   {
+      throw new Exception( "Somehow the player texture map is null, I have no idea what went wrong." );
    }
 
    string outputString = string.Empty;
@@ -145,28 +168,45 @@ string BuildTexturesOutputString( BitmapSource bitmap )
 
    outputString += "\n";
 
-   for ( int i = 0, idx = 0; i < _textureMap.Count; i++, idx++ )
+   for ( int i = 0, idx = 0; i < _worldTextureMap.Count; i++, idx++ )
    {
-      var unpackedPixel1 = _textureMap[i++];
-      var unpackedPixel2 = _textureMap[i];
+      var unpackedPixel1 = _worldTextureMap[i++];
+      var unpackedPixel2 = _worldTextureMap[i];
       byte packedPixels = (byte)( ( unpackedPixel1 << 2 ) | unpackedPixel2 );
       outputString += string.Format( "  zGame.worldTextureMap[{0}] = 0x{1};\n", idx, packedPixels.ToString( "X2" ) );
+   }
+
+   outputString += "\n";
+
+   for ( int i = 0, idx = 0; i < _playerTextureMap.Count; i++, idx++ )
+   {
+      var unpackedPixel1 = _playerTextureMap[i++];
+      var unpackedPixel2 = _playerTextureMap[i];
+      byte packedPixels = (byte)( ( unpackedPixel1 << 2 ) | unpackedPixel2 );
+      outputString += string.Format( "  zGame.playerTextureMap[{0}] = 0x{1};\n", idx, packedPixels.ToString( "X2" ) );
    }
 
    return outputString;
 }
 
-string GeneratePaletteAndTextures()
+string GenerateTextureMaps()
 {
-   var textureMapStream = new FileStream( "texture_map.png", FileMode.Open, FileAccess.Read, FileShare.Read );
-   var decoder = new PngBitmapDecoder( textureMapStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default );
-   BitmapSource bitmap = decoder.Frames[0];
-   BitmapSanityCheck( bitmap );
-   LoadTextureMap( bitmap );
-   return BuildTexturesOutputString( bitmap );
+   var worldFileStream = new FileStream( "world_texture_map.png", FileMode.Open, FileAccess.Read, FileShare.Read );
+   var worldDecoder = new PngBitmapDecoder( worldFileStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default );
+   BitmapSource worldBitmap = worldDecoder.Frames[0];
+   BitmapSanityCheck( worldBitmap );
+   LoadWorldTextureMap( worldBitmap );
+
+   var playerFileStream = new FileStream( "player_texture_map.png", FileMode.Open, FileAccess.Read, FileShare.Read );
+   var playerDecoder = new PngBitmapDecoder( playerFileStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default );
+   BitmapSource playerBitmap = playerDecoder.Frames[0];
+   BitmapSanityCheck( playerBitmap );
+   LoadPlayerTextureMap( playerBitmap );
+
+   return BuildPaletteAndTexturesOutputString();
 }
 
-string BuildWorldOutputString()
+string BuildWorldTileMapOutputString()
 {
    string outputString = "\n";
 
@@ -191,12 +231,12 @@ try
    outputString += "void zGame_LoadData()\n";
    outputString += "{\n";
 
-   Console.Write("Generating pallette and texture map...");
-   outputString += GeneratePaletteAndTextures();
-   Console.Write("Done!\n");
+   Console.Write( "Generating palette and texture maps..." );
+   outputString += GenerateTextureMaps();
+   Console.Write( "Done!\n" );
 
-   Console.Write( "Generating world map..." );
-   outputString += BuildWorldOutputString();
+   Console.Write( "Generating world tile map..." );
+   outputString += BuildWorldTileMapOutputString();
    Console.Write( "Done!\n\n" );
 
    outputString += "}\n";

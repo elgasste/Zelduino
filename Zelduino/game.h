@@ -17,6 +17,7 @@ typedef struct zGame_t
   // TODO: should this stuff be in renderer.h? or graphics.h or something?
   uint16_t palette[PALETTE_COLORS];
   uint8_t worldTextureMap[( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_SIZE * WORLD_TILE_TEXTURES];
+  uint8_t playerTextureMap[( PLAYER_SPRITE_SIZE / 2 ) * PLAYER_SPRITE_SIZE * PLAYER_SPRITE_FRAMES * 4];
 
   zWorldTile_t worldTiles[WORLD_TILES_X * WORLD_TILES_Y];
 

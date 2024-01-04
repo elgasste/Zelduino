@@ -25,6 +25,9 @@
 #define WORLD_OFFSET_X      32
 #define WORLD_OFFSET_Y      64
 
+#define PLAYER_SPRITE_SIZE   16
+#define PLAYER_SPRITE_FRAMES 2
+
 #define PLAYER_MAX_VELOCITY 70 // pixels per second
 
 #if !defined( HIGH )
