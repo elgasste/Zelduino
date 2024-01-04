@@ -170,9 +170,9 @@ string BuildPaletteAndTexturesOutputString()
 
    for ( int i = 0, idx = 0; i < _worldTextureMap.Count; i++, idx++ )
    {
-      var unpackedPixel1 = _worldTextureMap[i++];
-      var unpackedPixel2 = _worldTextureMap[i];
-      byte packedPixels = (byte)( ( unpackedPixel1 << 2 ) | unpackedPixel2 );
+      var unpackedPixel1 = (ushort)_worldTextureMap[i++];
+      var unpackedPixel2 = (ushort)_worldTextureMap[i];
+      var packedPixels = (ushort)( ( unpackedPixel1 << 4 ) | unpackedPixel2 );
       outputString += string.Format( "  zGame.worldTextureMap[{0}] = 0x{1};\n", idx, packedPixels.ToString( "X2" ) );
    }
 
@@ -180,9 +180,10 @@ string BuildPaletteAndTexturesOutputString()
 
    for ( int i = 0, idx = 0; i < _playerTextureMap.Count; i++, idx++ )
    {
-      var unpackedPixel1 = _playerTextureMap[i++];
-      var unpackedPixel2 = _playerTextureMap[i];
-      byte packedPixels = (byte)( ( unpackedPixel1 << 2 ) | unpackedPixel2 );
+      var unpackedPixel1 = (ushort)_playerTextureMap[i++];
+      var unpackedPixel2 = (ushort)_playerTextureMap[i];
+      var packedPixels = (ushort)( ( unpackedPixel1 << 4 ) | unpackedPixel2 );
+
       outputString += string.Format( "  zGame.playerTextureMap[{0}] = 0x{1};\n", idx, packedPixels.ToString( "X2" ) );
    }
 
