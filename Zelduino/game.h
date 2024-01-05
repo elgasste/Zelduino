@@ -16,6 +16,7 @@ typedef struct zGame_t
 {
   // TODO: should this stuff be in renderer.h? or graphics.h or something?
   uint16_t palette[PALETTE_COLORS];
+  
   uint8_t worldTextureMap[( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_SIZE * WORLD_TILE_TEXTURES];
   uint8_t playerTextureMap[( PLAYER_SPRITE_SIZE / 2 ) * PLAYER_SPRITE_SIZE * PLAYER_SPRITE_FRAMES * 4];
 
@@ -24,6 +25,7 @@ typedef struct zGame_t
   zGameState_t state;
 
   zVector4f_t playerHitBox;
+  zVector2f_t playerSpriteOffset;
   zVector2f_t playerVelocity;
 }
 zGame_t;

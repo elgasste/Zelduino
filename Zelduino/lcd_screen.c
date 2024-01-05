@@ -3,6 +3,7 @@
 #include "mcu_8bit_magic.h"
 #include "lcd_registers.h"
 #include "game.h"
+#include "player_sprite.h"
 
 #define TFTLCD_DELAY8 0x7F
 #define MAX_REG_NUM   24
@@ -152,14 +153,55 @@ void zLcdScreen_DrawWorldTile( zWorldTile_t* tile, int16_t x, int16_t y )
 
   int textureOffset = tile->textureIndex * ( WORLD_TILE_SIZE / 2 );
 
-  for( int16_t h = 0; h < WORLD_TILE_SIZE; h++ )
+  for( int16_t row = 0; row < WORLD_TILE_SIZE; row++ )
   {
-    for( uint16_t textureCol = textureOffset; textureCol < textureOffset + ( WORLD_TILE_SIZE / 2 ); textureCol++ )
+    for( uint16_t col = textureOffset; col < textureOffset + ( WORLD_TILE_SIZE / 2 ); col++ )
     {
-      uint8_t texturePair = zGame.worldTextureMap[( h * ( ( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_TEXTURES ) ) + textureCol];
+      uint8_t texturePair = zGame.worldTextureMap[( row * ( ( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_TEXTURES ) ) + col];
 
-      writeData16( zGame.palette[texturePair >> 2] );
-      writeData16( zGame.palette[texturePair & 0x3] );
+      writeData16( zGame.palette[texturePair >> 4] );
+      writeData16( zGame.palette[texturePair & 0xF] );
+    }
+  }
+
+	CS_IDLE;
+}
+
+void zLcdScreen_DrawPlayerSprite( int16_t x, int16_t y )
+{
+  zLcdScreen_SetAddrWindow( x, y, x + PLAYER_SPRITE_SIZE - 1, y + PLAYER_SPRITE_SIZE - 1 );
+
+	CS_ACTIVE;
+
+	writeCmd8( zLcdScreen.CC );
+
+  int textureOffsetX = zPlayerSprite.currentFrame * ( PLAYER_SPRITE_SIZE / 2 );
+  int textureOffsetY = zPlayerSprite.direction * PLAYER_SPRITE_SIZE; // facing downward
+
+  for( int16_t row = textureOffsetY; row < textureOffsetY + PLAYER_SPRITE_SIZE; row++ )
+  {
+    for( uint16_t col = textureOffsetX; col < textureOffsetX + ( PLAYER_SPRITE_SIZE / 2 ); col++ )
+    {
+      uint8_t texturePair = zGame.playerTextureMap[( row * ( ( PLAYER_SPRITE_SIZE / 2 ) * PLAYER_SPRITE_FRAMES ) ) + col];
+
+      // TODO: figure out transparency!
+      if ( zGame.palette[texturePair >> 4] == TRANSPARENT_COLOR)
+      {
+        writeData16( zGame.palette[0] );
+      }
+      else
+      {
+        writeData16( zGame.palette[texturePair >> 4] );
+      }
+
+      if ( zGame.palette[texturePair & 0xF] == TRANSPARENT_COLOR )
+      {
+        writeData16( zGame.palette[0] );
+      }
+      else
+      {
+        writeData16( zGame.palette[texturePair & 0xF] );
+      }
     }
   }
 

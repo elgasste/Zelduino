@@ -8,6 +8,6 @@ typedef enum zDirection_t
   zDirection_Right,
   zDirection_Down
 }
-z_Direction_t;
+zDirection_t;
 
 #endif // DIRECTION_H

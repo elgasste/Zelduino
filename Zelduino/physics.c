@@ -14,6 +14,20 @@ void zPhysics_MovePlayer()
   newPosition.x = zGame.playerHitBox.x + ( zGame.playerVelocity.x * zClock.frameSeconds );
   newPosition.y = zGame.playerHitBox.y + ( zGame.playerVelocity.y * zClock.frameSeconds );
 
+  float distanceX = newPosition.x - zGame.playerHitBox.x;
+  float distanceY = newPosition.y - zGame.playerHitBox.y;
+
+  if ( distanceX < 0 )
+  {
+    distanceX = -distanceX;
+  }
+  if ( distanceY < 0 )
+  {
+    distanceY = -distanceY;
+  }
+
+  zPlayerSprite_Tic( distanceX + distanceY );
+
   // clip to world boundaries
   if ( newPosition.x < 0 )
   {

@@ -16,6 +16,7 @@
 #define GAME_FPS            30
 
 #define PALETTE_COLORS      16
+#define TRANSPARENT_COLOR   0xF81F
 
 #define WORLD_TILE_SIZE     16
 #define WORLD_TILES_X       16
@@ -25,8 +26,9 @@
 #define WORLD_OFFSET_X      32
 #define WORLD_OFFSET_Y      64
 
-#define PLAYER_SPRITE_SIZE   16
-#define PLAYER_SPRITE_FRAMES 2
+#define PLAYER_SPRITE_SIZE            16
+#define PLAYER_SPRITE_FRAMES          2
+#define PLAYER_SPRITE_SWAP_DISTANCE   16.0f
 
 #define PLAYER_MAX_VELOCITY 70 // pixels per second
 
