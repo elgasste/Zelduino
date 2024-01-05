@@ -11,7 +11,6 @@ void zPlayerSprite_Tic( float distance )
 {
   zPlayerSprite.distanceElapsed += distance;
 
-  // MUFFINS: is this calculation wrong? what's going on here??
   while ( zPlayerSprite.distanceElapsed >= PLAYER_SPRITE_SWAP_DISTANCE )
   {
     zPlayerSprite.currentFrame++;
