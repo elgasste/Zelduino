@@ -65,11 +65,8 @@ static void zRenderer_RenderPlayingState()
     zRenderer_RedrawDirtyTiles();
 
     // now draw the player at the new position
-    zLcdScreen_FillRect( zRenderer.worldScreenOffset.x + zGame.playerHitBox.x,
-                         zRenderer.worldScreenOffset.y + zGame.playerHitBox.y,
-                         zGame.playerHitBox.w,
-                         zGame.playerHitBox.h,
-                         zRenderer.playerColor );
+    zLcdScreen_DrawPlayerSprite( zRenderer.worldScreenOffset.x + zGame.playerHitBox.x + zGame.playerSpriteOffset.x,
+                                 zRenderer.worldScreenOffset.y + zGame.playerHitBox.y + zGame.playerSpriteOffset.y );
 
     zRenderer.playerHitBoxCache = zGame.playerHitBox;
   }
@@ -79,10 +76,27 @@ static void zRenderer_RedrawDirtyTiles()
 {
   // TODO: maybe at some point try doing something more efficient than this. we can figure out
   // exactly which rects are dirty and only draw those, it'd probably be faster than drawing every dirty tile.
-  int tileColIndexStart = zRenderer.playerHitBoxCache.x / WORLD_TILE_SIZE;
-  int tileColIndexEnd = ( zRenderer.playerHitBoxCache.x + zRenderer.playerHitBoxCache.w ) / WORLD_TILE_SIZE;
-  int tileRowIndexStart = zRenderer.playerHitBoxCache.y / WORLD_TILE_SIZE;
-  int tileRowIndexEnd = ( zRenderer.playerHitBoxCache.y + zRenderer.playerHitBoxCache.h ) / WORLD_TILE_SIZE;
+  int tileColIndexStart = ( zRenderer.playerHitBoxCache.x + zGame.playerSpriteOffset.x ) / WORLD_TILE_SIZE;
+  int tileColIndexEnd = ( zRenderer.playerHitBoxCache.x + zGame.playerSpriteOffset.x + PLAYER_SPRITE_SIZE ) / WORLD_TILE_SIZE;
+  int tileRowIndexStart = ( zRenderer.playerHitBoxCache.y + zGame.playerSpriteOffset.y ) / WORLD_TILE_SIZE;
+  int tileRowIndexEnd = ( zRenderer.playerHitBoxCache.y + zGame.playerSpriteOffset.y + PLAYER_SPRITE_SIZE ) / WORLD_TILE_SIZE;
+
+  if ( tileColIndexStart < 0 )
+  {
+    tileColIndexStart = 0;
+  }
+  if ( tileColIndexEnd >= WORLD_TILES_X )
+  {
+    tileColIndexEnd = WORLD_TILES_X - 1;
+  }
+  if ( tileRowIndexStart < 0 )
+  {
+    tileRowIndexStart = 0;
+  }
+  if ( tileRowIndexEnd >= WORLD_TILES_Y )
+  {
+    tileRowIndexEnd = WORLD_TILES_Y - 1;
+  }
 
   for( int row = tileRowIndexStart; row <= tileRowIndexEnd; row++ )
   {
