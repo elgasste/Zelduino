@@ -4,6 +4,7 @@
 #include "lcd_registers.h"
 #include "game.h"
 #include "player_sprite.h"
+#include "renderer.h"
 
 #define TFTLCD_DELAY8 0x7F
 #define MAX_REG_NUM   24
@@ -17,6 +18,7 @@ static void zLcdScreen_SetRotation( uint8_t r );
 static void zLcdScreen_SetAddrWindow( int16_t x1, int16_t y1, int16_t x2, int16_t y2 );
 static void zLcdScreen_VertScroll( int16_t top, int16_t scrollines, int16_t offset );
 static void zLcdScreen_InvertDisplay( bool i );
+static uint16_t zLcdScreen_GetWorldPixelColor( int16_t x, int16_t y );
 
 void zLcdScreen_Init( uint8_t cs, uint8_t cd, uint8_t wr, uint8_t rd, uint8_t reset )
 {
@@ -178,16 +180,16 @@ void zLcdScreen_DrawPlayerSprite( int16_t x, int16_t y )
   int textureOffsetX = zPlayerSprite.currentFrame * ( PLAYER_SPRITE_SIZE / 2 );
   int textureOffsetY = zPlayerSprite.direction * PLAYER_SPRITE_SIZE; // facing downward
 
-  for( int16_t row = textureOffsetY; row < textureOffsetY + PLAYER_SPRITE_SIZE; row++ )
+  for( int16_t row = textureOffsetY, yOffset = 0; row < textureOffsetY + PLAYER_SPRITE_SIZE; row++, yOffset++ )
   {
-    for( uint16_t col = textureOffsetX; col < textureOffsetX + ( PLAYER_SPRITE_SIZE / 2 ); col++ )
+    for( uint16_t col = textureOffsetX, xOffset = 0; col < textureOffsetX + ( PLAYER_SPRITE_SIZE / 2 ); col++, xOffset++ )
     {
       uint8_t texturePair = zGame.playerTextureMap[( row * ( ( PLAYER_SPRITE_SIZE / 2 ) * PLAYER_SPRITE_FRAMES ) ) + col];
 
-      // TODO: figure out transparency!
       if ( zGame.palette[texturePair >> 4] == TRANSPARENT_COLOR)
       {
-        writeData16( zGame.palette[0] );
+        uint16_t rearPixel = zLcdScreen_GetWorldPixelColor( x + xOffset, y + yOffset );
+        writeData16( rearPixel );
       }
       else
       {
@@ -196,7 +198,8 @@ void zLcdScreen_DrawPlayerSprite( int16_t x, int16_t y )
 
       if ( zGame.palette[texturePair & 0xF] == TRANSPARENT_COLOR )
       {
-        writeData16( zGame.palette[0] );
+        uint16_t rearPixel = zLcdScreen_GetWorldPixelColor( x + xOffset, y + yOffset );
+        writeData16( rearPixel );
       }
       else
       {
@@ -406,4 +409,28 @@ static void zLcdScreen_InvertDisplay( bool i )
 	uint8_t val = zLcdScreen.VL ^ i;
 	writeCmd8( val ? 0x21 : 0x20 );
 	CS_IDLE;
+}
+
+static uint16_t zLcdScreen_GetWorldPixelColor( int16_t x, int16_t y )
+{
+  int16_t worldX = x - zRenderer.worldScreenOffset.x;
+  int16_t worldY = y - zRenderer.worldScreenOffset.y;
+
+  zWorldTile_t* tile = &( zGame.worldTiles[( ( worldY / WORLD_TILE_SIZE ) * WORLD_TILES_X ) + ( worldX / WORLD_TILE_SIZE )] );
+
+  uint8_t textureMapX = tile->textureIndex * ( WORLD_TILE_SIZE / 2 );
+
+  uint8_t textureOffsetX = worldX % WORLD_TILE_SIZE;
+  uint8_t textureOffsetY = worldY % WORLD_TILE_SIZE;
+
+  uint16_t textureMapIndex = ( textureOffsetY * ( ( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_TEXTURES ) ) + ( textureMapX + ( textureOffsetX / 2 ) );
+
+  if ( textureOffsetX % 2 == 0 )
+  {
+    return zGame.palette[zGame.worldTextureMap[textureMapIndex] >> 4];
+  }
+  else
+  {
+    return zGame.palette[zGame.worldTextureMap[textureMapIndex] & 0xF];
+  }
 }
