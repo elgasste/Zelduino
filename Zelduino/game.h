@@ -28,6 +28,8 @@ typedef struct zGame_t
   zWorldTile_t worldTiles[WORLD_TILES_X * WORLD_TILES_Y];
   zCollisionTile_t collisionTiles[COLLISION_TILES_X * COLLISION_TILES_Y];
 
+  zVector2ui_t worldCoords;
+
   zGameState_t state;
 
   zVector4f_t playerHitBox;
