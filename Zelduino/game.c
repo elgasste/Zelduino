@@ -53,13 +53,15 @@ static void zGame_HandlePlayingStateInput()
   zBool rightIsDown = zButtonStates[zButtonType_Right].down;
   zBool downIsDown = zButtonStates[zButtonType_Down].down;
 
-  // TODO: eventually figure out the logic of which direction to actually face.
-  // for now just wing it.
-
   if ( leftIsDown && !rightIsDown )
   {
     zGame.playerVelocity.x = -PLAYER_MAX_VELOCITY;
-    zPlayerSprite.direction = zDirection_Left;
+
+    if ( !( upIsDown && zPlayerSprite.direction == zDirection_Up ) &&
+         !( downIsDown && zPlayerSprite.direction == zDirection_Down ) )
+    {
+      zPlayerSprite.direction = zDirection_Left;
+    }
 
     if ( upIsDown || downIsDown )
     {
@@ -69,7 +71,12 @@ static void zGame_HandlePlayingStateInput()
   else if ( rightIsDown && !leftIsDown )
   {
     zGame.playerVelocity.x = PLAYER_MAX_VELOCITY;
-    zPlayerSprite.direction = zDirection_Right;
+
+    if ( !( upIsDown && zPlayerSprite.direction == zDirection_Up ) &&
+         !( downIsDown && zPlayerSprite.direction == zDirection_Down ) )
+    {
+      zPlayerSprite.direction = zDirection_Right;
+    }
 
     if ( upIsDown || downIsDown )
     {
@@ -80,7 +87,12 @@ static void zGame_HandlePlayingStateInput()
   if ( upIsDown && !downIsDown )
   {
     zGame.playerVelocity.y = -PLAYER_MAX_VELOCITY;
-    zPlayerSprite.direction = zDirection_Up;
+
+    if ( !( leftIsDown && zPlayerSprite.direction == zDirection_Left ) &&
+         !( rightIsDown && zPlayerSprite.direction == zDirection_Right ) )
+    {
+      zPlayerSprite.direction = zDirection_Up;
+    }
 
     if ( leftIsDown || rightIsDown )
     {
@@ -90,7 +102,12 @@ static void zGame_HandlePlayingStateInput()
   else if ( downIsDown && !upIsDown )
   {
     zGame.playerVelocity.y = PLAYER_MAX_VELOCITY;
-    zPlayerSprite.direction = zDirection_Down;
+
+    if ( !( leftIsDown && zPlayerSprite.direction == zDirection_Left ) &&
+         !( rightIsDown && zPlayerSprite.direction == zDirection_Right ) )
+    {
+      zPlayerSprite.direction = zDirection_Down;
+    }
 
     if ( leftIsDown || rightIsDown )
     {
