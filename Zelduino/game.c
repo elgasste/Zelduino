@@ -15,10 +15,10 @@ void zGame_Init()
   zGame.playerHitBox.x = ( ( WORLD_TILES_X / 2 ) - 3 ) * WORLD_TILE_SIZE;
   zGame.playerHitBox.y = ( WORLD_TILES_Y / 2 ) * WORLD_TILE_SIZE;
   zGame.playerHitBox.w = 12;
-  zGame.playerHitBox.h = 12;
+  zGame.playerHitBox.h = 8;
 
   zGame.playerSpriteOffset.x = -2;
-  zGame.playerSpriteOffset.y = -2;
+  zGame.playerSpriteOffset.y = -6;
 
   zGame.playerVelocity.x = 0;
   zGame.playerVelocity.y = 0;
