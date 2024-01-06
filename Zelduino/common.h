@@ -23,6 +23,10 @@
 #define WORLD_TILES_Y       11
 #define WORLD_TILE_TEXTURES 7   // TODO: can we inject this automatically?
 
+#define COLLISION_TILE_SIZE 8
+#define COLLISION_TILES_X   32
+#define COLLISION_TILES_Y   22
+
 #define WORLD_OFFSET_X      32
 #define WORLD_OFFSET_Y      64
 

@@ -7,8 +7,8 @@
 
 void zPhysics_MovePlayer()
 {
-  int16_t worldW = WORLD_TILES_X * WORLD_TILE_SIZE;
-  int16_t worldH = WORLD_TILES_Y * WORLD_TILE_SIZE;
+  int16_t worldW = COLLISION_TILES_X * COLLISION_TILE_SIZE;
+  int16_t worldH = COLLISION_TILES_Y * COLLISION_TILE_SIZE;
 
   zVector2f_t newPosition;
   newPosition.x = zGame.playerHitBox.x + ( zGame.playerVelocity.x * zClock.frameSeconds );
@@ -50,21 +50,21 @@ void zPhysics_MovePlayer()
   // clip to unpassable tiles (horizontal first, then vertical)
   if ( newPosition.x != zGame.playerHitBox.x )
   {
-    int tileRowStartIndex = zGame.playerHitBox.y / WORLD_TILE_SIZE;
-    int tileRowEndIndex = ( zGame.playerHitBox.y + zGame.playerHitBox.h ) / WORLD_TILE_SIZE;
+    int tileRowStartIndex = zGame.playerHitBox.y / COLLISION_TILE_SIZE;
+    int tileRowEndIndex = ( zGame.playerHitBox.y + zGame.playerHitBox.h ) / COLLISION_TILE_SIZE;
 
     if ( newPosition.x < zGame.playerHitBox.x )
     {
       // moving left, check leftward tiles
-      int col = newPosition.x / WORLD_TILE_SIZE;
+      int col = newPosition.x / COLLISION_TILE_SIZE;
 
       for( int row = tileRowStartIndex; row <= tileRowEndIndex; row++ )
       {
-        zWorldTile_t* tile = &( zGame.worldTiles[ zMath_WorldIndexFromCoords( row, col ) ] );
+        zCollisionTile_t* tile = &( zGame.collisionTiles[ zMath_CollisionIndexFromCoords( row, col ) ] );
 
         if ( !tile->passable )
         {
-          newPosition.x = ( ( col + 1 ) * WORLD_TILE_SIZE );
+          newPosition.x = ( ( col + 1 ) * COLLISION_TILE_SIZE );
           break;
         }
       }
@@ -72,15 +72,15 @@ void zPhysics_MovePlayer()
     else
     {
       // moving right, check rightward tiles
-      int col = ( newPosition.x + zGame.playerHitBox.w ) / WORLD_TILE_SIZE;
+      int col = ( newPosition.x + zGame.playerHitBox.w ) / COLLISION_TILE_SIZE;
 
       for( int row = tileRowStartIndex; row <= tileRowEndIndex; row++ )
       {
-        zWorldTile_t* tile = &( zGame.worldTiles[ zMath_WorldIndexFromCoords( row, col ) ] );
+        zCollisionTile_t* tile = &( zGame.collisionTiles[ zMath_CollisionIndexFromCoords( row, col ) ] );
 
         if ( !tile->passable )
         {
-          newPosition.x = ( col * WORLD_TILE_SIZE ) - zGame.playerHitBox.w - CLIP_PADDING;
+          newPosition.x = ( col * COLLISION_TILE_SIZE ) - zGame.playerHitBox.w - CLIP_PADDING;
           break;
         }
       }
@@ -89,21 +89,21 @@ void zPhysics_MovePlayer()
 
   if ( newPosition.y != zGame.playerHitBox.y )
   {
-    int tileColStartIndex = zGame.playerHitBox.x / WORLD_TILE_SIZE;
-    int tileColEndIndex = ( zGame.playerHitBox.x + zGame.playerHitBox.w ) / WORLD_TILE_SIZE;
+    int tileColStartIndex = zGame.playerHitBox.x / COLLISION_TILE_SIZE;
+    int tileColEndIndex = ( zGame.playerHitBox.x + zGame.playerHitBox.w ) / COLLISION_TILE_SIZE;
 
     if ( newPosition.y < zGame.playerHitBox.y )
     {
       // moving up, check upward tiles
-      int row = newPosition.y / WORLD_TILE_SIZE;
+      int row = newPosition.y / COLLISION_TILE_SIZE;
 
       for( int col = tileColStartIndex; col <= tileColEndIndex; col++ )
       {
-        zWorldTile_t* tile = &( zGame.worldTiles[ zMath_WorldIndexFromCoords( row, col ) ] );
+        zCollisionTile_t* tile = &( zGame.collisionTiles[ zMath_CollisionIndexFromCoords( row, col ) ] );
 
         if ( !tile->passable )
         {
-          newPosition.y = ( ( row + 1 ) * WORLD_TILE_SIZE );
+          newPosition.y = ( ( row + 1 ) * COLLISION_TILE_SIZE );
           break;
         }
       }
@@ -111,15 +111,15 @@ void zPhysics_MovePlayer()
     else
     {
       // moving down, check downward tiles
-      int row = ( newPosition.y + zGame.playerHitBox.h ) / WORLD_TILE_SIZE;
+      int row = ( newPosition.y + zGame.playerHitBox.h ) / COLLISION_TILE_SIZE;
 
       for( int col = tileColStartIndex; col <= tileColEndIndex; col++ )
       {
-        zWorldTile_t* tile = &( zGame.worldTiles[ zMath_WorldIndexFromCoords( row, col ) ] );
+        zCollisionTile_t* tile = &( zGame.collisionTiles[ zMath_CollisionIndexFromCoords( row, col ) ] );
 
         if ( !tile->passable )
         {
-          newPosition.y = ( row * WORLD_TILE_SIZE ) - zGame.playerHitBox.h - CLIP_PADDING;
+          newPosition.y = ( row * COLLISION_TILE_SIZE ) - zGame.playerHitBox.h - CLIP_PADDING;
           break;
         }
       }

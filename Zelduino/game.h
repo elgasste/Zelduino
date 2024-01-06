@@ -8,9 +8,14 @@
 typedef struct zWorldTile_t
 {
   uint8_t textureIndex;
-  zBool passable;
 }
 zWorldTile_t;
+
+typedef struct zCollisionTile_t
+{
+  zBool passable;
+}
+zCollisionTile_t;
 
 typedef struct zGame_t
 {
@@ -21,6 +26,7 @@ typedef struct zGame_t
   uint8_t playerTextureMap[( PLAYER_SPRITE_SIZE / 2 ) * PLAYER_SPRITE_SIZE * PLAYER_SPRITE_FRAMES * 4];
 
   zWorldTile_t worldTiles[WORLD_TILES_X * WORLD_TILES_Y];
+  zCollisionTile_t collisionTiles[COLLISION_TILES_X * COLLISION_TILES_Y];
 
   zGameState_t state;
 
