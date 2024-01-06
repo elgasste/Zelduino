@@ -186,7 +186,14 @@ void zLcdScreen_DrawPlayerSprite( int16_t x, int16_t y )
     {
       uint8_t texturePair = zGame.playerTextureMap[( row * ( ( PLAYER_SPRITE_SIZE / 2 ) * PLAYER_SPRITE_FRAMES ) ) + col];
 
-      if ( zGame.palette[texturePair >> 4] == TRANSPARENT_COLOR)
+      if ( x + xOffset - zRenderer.worldScreenOffset.x < 0 ||
+           y + yOffset - zRenderer.worldScreenOffset.y < 0 ||
+           x + xOffset - zRenderer.worldScreenOffset.x >= ( WORLD_TILES_X * WORLD_TILE_SIZE ) ||
+           y + yOffset - zRenderer.worldScreenOffset.y >= ( WORLD_TILES_Y * WORLD_TILE_SIZE ) )
+      {
+        writeData16( 0 );
+      }
+      else if ( zGame.palette[texturePair >> 4] == TRANSPARENT_COLOR)
       {
         uint16_t rearPixel = zLcdScreen_GetWorldPixelColor( x + xOffset, y + yOffset );
         writeData16( rearPixel );
@@ -198,7 +205,14 @@ void zLcdScreen_DrawPlayerSprite( int16_t x, int16_t y )
 
       xOffset++;
 
-      if ( zGame.palette[texturePair & 0xF] == TRANSPARENT_COLOR )
+      if ( x + xOffset - zRenderer.worldScreenOffset.x < 0 ||
+           y + yOffset - zRenderer.worldScreenOffset.y < 0 ||
+           x + xOffset - zRenderer.worldScreenOffset.x >= ( WORLD_TILES_X * WORLD_TILE_SIZE ) ||
+           y + yOffset - zRenderer.worldScreenOffset.y >= ( WORLD_TILES_Y * WORLD_TILE_SIZE ) )
+      {
+        writeData16( 0 );
+      }
+      else if ( zGame.palette[texturePair & 0xF] == TRANSPARENT_COLOR )
       {
         uint16_t rearPixel = zLcdScreen_GetWorldPixelColor( x + xOffset, y + yOffset );
         writeData16( rearPixel );
