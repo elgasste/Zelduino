@@ -14,6 +14,7 @@ zBool zVector2f_Equals( zVector2f_t* v1, zVector2f_t* v2 );
 zBool zVector4f_Equals( zVector4f_t* v1, zVector4f_t* v2 );
 
 int zMath_WorldIndexFromCoords( int row, int col );
+int zMath_CollisionIndexFromCoords( int row, int col );
 
 #if defined( __cplusplus )
 }

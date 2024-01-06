@@ -24,3 +24,8 @@ int zMath_WorldIndexFromCoords( int row, int col )
 {
   return ( row * WORLD_TILES_X ) + col;
 }
+
+int zMath_CollisionIndexFromCoords( int row, int col )
+{
+  return ( row * COLLISION_TILES_X ) + col;
+}
