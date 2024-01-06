@@ -196,6 +196,8 @@ void zLcdScreen_DrawPlayerSprite( int16_t x, int16_t y )
         writeData16( zGame.palette[texturePair >> 4] );
       }
 
+      xOffset++;
+
       if ( zGame.palette[texturePair & 0xF] == TRANSPARENT_COLOR )
       {
         uint16_t rearPixel = zLcdScreen_GetWorldPixelColor( x + xOffset, y + yOffset );
@@ -416,16 +418,13 @@ static uint16_t zLcdScreen_GetWorldPixelColor( int16_t x, int16_t y )
   int16_t worldX = x - zRenderer.worldScreenOffset.x;
   int16_t worldY = y - zRenderer.worldScreenOffset.y;
 
-  zWorldTile_t* tile = &( zGame.worldTiles[( ( worldY / WORLD_TILE_SIZE ) * WORLD_TILES_X ) + ( worldX / WORLD_TILE_SIZE )] );
+  uint8_t textureIndex = zGame.worldTiles[( ( worldY / WORLD_TILE_SIZE ) * WORLD_TILES_X ) + ( worldX / WORLD_TILE_SIZE )].textureIndex;
+  uint8_t textureStartX = textureIndex * ( WORLD_TILE_SIZE / 2 );
+  uint8_t pixelX = worldX % WORLD_TILE_SIZE;
+  uint8_t pixelY = worldY % WORLD_TILE_SIZE;
+  uint16_t textureMapIndex = ( pixelY * ( ( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_TEXTURES ) ) + ( textureStartX + ( pixelX / 2 ) );
 
-  uint8_t textureMapX = tile->textureIndex * ( WORLD_TILE_SIZE / 2 );
-
-  uint8_t textureOffsetX = worldX % WORLD_TILE_SIZE;
-  uint8_t textureOffsetY = worldY % WORLD_TILE_SIZE;
-
-  uint16_t textureMapIndex = ( textureOffsetY * ( ( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_TEXTURES ) ) + ( textureMapX + ( textureOffsetX / 2 ) );
-
-  if ( textureOffsetX % 2 == 0 )
+  if ( pixelX % 2 == 0 )
   {
     return zGame.palette[zGame.worldTextureMap[textureMapIndex] >> 4];
   }
