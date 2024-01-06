@@ -44,9 +44,12 @@ zGame_t zGame;
 extern "C" {
 #endif
 
-void zGame_LoadData();
 void zGame_Init();
 void zGame_Update();
+
+// implemented in data_loader.c
+void zGame_LoadData();
+void zGame_LoadWorldMap();
 
 #if defined( __cplusplus )
 }
