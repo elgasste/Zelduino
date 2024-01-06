@@ -12,7 +12,7 @@ void zGame_Init()
   zGame_LoadData();
 
   // TODO: this should be part of data_loader.c at some point
-  zGame.worldCoords.x = 0;
+  zGame.worldCoords.x = 1;
   zGame.worldCoords.y = 0;
   zGame_LoadWorldMap();
 

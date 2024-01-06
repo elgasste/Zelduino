@@ -28,23 +28,35 @@ void zPhysics_MovePlayer()
 
   zPlayerSprite_Tic( distanceX + distanceY );
 
-  // clip to world boundaries
+  // check world boundaries
   if ( newPosition.x < 0 )
   {
-    newPosition.x = 0;
+    zGame.worldCoords.x--;
+    zGame.playerHitBox.x = worldW - zGame.playerHitBox.w - 1;
+    zGame_LoadWorldMap();
+    return;
   }
   else if ( newPosition.x + zGame.playerHitBox.w >= worldW )
   {
-    newPosition.x = worldW - zGame.playerHitBox.w - 1;
+    zGame.worldCoords.x++;
+    zGame.playerHitBox.x = CLIP_PADDING;
+    zGame_LoadWorldMap();
+    return;
   }
 
   if ( newPosition.y < 0 )
   {
-    newPosition.y = 0;
+    zGame.worldCoords.y--;
+    zGame.playerHitBox.y = worldH - zGame.playerHitBox.h - 1;
+    zGame_LoadWorldMap();
+    return;
   }
   else if ( newPosition.y + zGame.playerHitBox.h >= worldH )
   {
-    newPosition.y = worldH - zGame.playerHitBox.h - 1;
+    zGame.worldCoords.y++;
+    zGame.playerHitBox.y = CLIP_PADDING;
+    zGame_LoadWorldMap();
+    return;
   }
 
   // clip to unpassable tiles (horizontal first, then vertical)
