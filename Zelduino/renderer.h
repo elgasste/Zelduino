@@ -7,11 +7,11 @@
 typedef struct zRenderer_t
 {
   zVector2i_t worldScreenOffset;
-  zBool drawWorldBackdrop;
 
   uint16_t wipeColor;
   uint16_t playerColor;
 
+  zVector2ui_t worldCoordsCache;
   zVector4f_t playerHitBoxCache;
 }
 zRenderer_t;

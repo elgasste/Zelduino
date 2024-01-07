@@ -3,25 +3,67 @@ using System.Windows.Media;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-int[] _worldMapTextureIndexes =
+// TODO: put these in another file, and also make them 2d arrays
+int[] _worldMapTextureIndexes0 =
 {
-   2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,
+   2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+   2,2,2,2,2,2,2,2,2,2,2,3,0,0,2,2,
+   2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,
+   2,0,0,0,0,0,0,0,0,8,0,0,0,0,4,2,
+   2,0,0,0,0,0,0,0,0,0,0,8,0,0,0,4,
+   2,0,0,8,0,0,8,0,0,8,0,0,0,0,0,0,
+   2,0,0,0,0,0,0,0,0,0,0,8,0,0,0,7,
+   2,0,0,0,0,0,0,0,0,8,0,0,0,0,7,2,
+   2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,
+   2,6,6,6,6,6,6,6,6,6,6,6,6,6,2,2,
+   2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+};
+
+int[] _collisionMapPassable0 =
+{
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,
+   0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
+   0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+};
+
+int[] _worldMapTextureIndexes1 =
+{
+   2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
    2,2,2,2,1,2,3,0,0,2,2,2,2,2,2,2,
    2,2,2,3,0,0,0,0,0,2,2,2,2,2,2,2,
    2,2,3,0,0,0,0,0,0,2,2,2,2,2,2,2,
    2,3,0,0,0,0,0,0,0,2,2,2,2,2,2,2,
    0,0,0,0,0,0,0,0,0,4,2,2,2,2,2,2,
-   2,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   2,5,0,0,0,0,0,0,0,0,0,0,0,0,0,2,
    2,2,0,0,0,0,0,0,0,0,0,0,0,0,6,6,
    2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,
    2,2,6,6,6,6,6,6,6,6,6,6,6,6,2,2,
    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
 };
 
-int[] _collisionMapPassable =
+int[] _collisionMapPassable1 =
 {
-   0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-   0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
    0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
    0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
    0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -32,8 +74,8 @@ int[] _collisionMapPassable =
    0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
-   0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-   0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+   0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,
+   0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,
    0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
    0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
    0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,
@@ -121,6 +163,7 @@ void LoadWorldTextureMap( BitmapSource bitmap )
       throw new Exception( "Somehow the world texture map is null, no idea how it happened." );
    }
 
+   // TODO: auto-generate a #define with the number of available textures
    for ( int row = 0; row < bitmap.PixelHeight; row++ )
    {
       for ( int col = 0; col < bitmap.PixelWidth; col++ )
@@ -218,35 +261,48 @@ string GenerateTextureMaps()
    return BuildPaletteAndTexturesOutputString();
 }
 
-string BuildWorldTileMapOutputString()
+string BuildLoadMapFunctionOutputString()
 {
-   string outputString = "\n";
+   string outputString = "  // only two sections for now\n";
 
-   for( int row = 0; row < 11; row++ )
+   for( int i = 0; i < 2; i++ )
    {
-      for( int col = 0; col < 16; col++ )
+      if ( i == 0 )
       {
-         int i = ( row * 16 ) + col;
-
-         outputString += string.Format( "  zGame.worldTiles[{0}].textureIndex = {1};\n", i, _worldMapTextureIndexes[i]);
+         outputString += string.Format( "  if ( zGame.worldCoords.x == {0} )\n", i );
       }
-   }
-
-   return outputString;
-}
-
-string BuildCollisionTileMapOutputString()
-{
-   string outputString = "\n";
-
-   for ( int row = 0; row < 22; row++ )
-   {
-      for ( int col = 0; col < 32; col++ )
+      else
       {
-         int i = ( row * 32 ) + col;
-
-         outputString += string.Format( "  zGame.collisionTiles[{0}].passable = {1};\n", i, _collisionMapPassable[i] == 1 ? "zTrue" : "zFalse" );
+         outputString += string.Format( "  else if ( zGame.worldCoords.x == {0} )\n", i );
       }
+
+      outputString += "  {\n";
+
+      for ( int row = 0; row < 11; row++ )
+      {
+         for ( int col = 0; col < 16; col++ )
+         {
+            int j = ( row * 16 ) + col;
+
+            outputString += string.Format( "    zGame.worldTiles[{0}].textureIndex = {1};\n", j,
+               i == 0 ? _worldMapTextureIndexes0[j] : _worldMapTextureIndexes1[j] );
+         }
+      }
+
+      outputString += "\n";
+
+      for ( int row = 0; row < 22; row++ )
+      {
+         for ( int col = 0; col < 32; col++ )
+         {
+            int j = ( row * 32 ) + col;
+
+            outputString += string.Format( "    zGame.collisionTiles[{0}].passable = {1};\n", j,
+               i == 0 ? ( _collisionMapPassable0[j] == 1 ? "zTrue" : "zFalse" ) : ( _collisionMapPassable1[j] == 1 ? "zTrue" : "zFalse" ) );
+         }
+      }
+
+      outputString += "  }\n";
    }
 
    return outputString;
@@ -263,9 +319,12 @@ try
    outputString += GenerateTextureMaps();
    Console.Write( "Done!\n" );
 
-   Console.Write( "Generating world and collision tile maps..." );
-   outputString += BuildWorldTileMapOutputString();
-   outputString += BuildCollisionTileMapOutputString();
+   outputString += "}\n\n";
+   outputString += "void zGame_LoadWorldMap()\n";
+   outputString += "{\n";
+
+   Console.Write( "Generating map loader function..." );
+   outputString += BuildLoadMapFunctionOutputString();
    Console.Write( "Done!\n\n" );
 
    outputString += "}\n";

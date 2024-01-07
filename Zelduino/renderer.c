@@ -14,7 +14,8 @@ void zRenderer_Init()
   zRenderer.worldScreenOffset.x = WORLD_OFFSET_X;
   zRenderer.worldScreenOffset.y = WORLD_OFFSET_Y;
 
-  zRenderer.drawWorldBackdrop = zTrue;
+  zRenderer.worldCoordsCache.x = INT16_MAX;
+  zRenderer.worldCoordsCache.y = INT16_MAX;
 
   zRenderer.wipeColor = 0x0000;
   zRenderer.playerColor = 0x001F; // blue
@@ -44,9 +45,9 @@ static void zRenderer_RenderLoadingState()
 static void zRenderer_RenderPlayingState()
 {
   // this is VERY slow, so only do it when absolutely necessary
-  if ( zRenderer.drawWorldBackdrop )
+  if ( !zVector2ui_Equals( &( zRenderer.worldCoordsCache ), &( zGame.worldCoords ) ) )
   {
-    zRenderer.drawWorldBackdrop = zFalse;
+    zRenderer.worldCoordsCache = zGame.worldCoords;
 
     for( int row = 0; row < WORLD_TILES_Y; row++ )
     {

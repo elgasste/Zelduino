@@ -10,6 +10,13 @@ typedef struct zVector2i_t
 }
 zVector2i_t;
 
+typedef struct zVector2ui_t
+{
+  uint16_t x;
+  uint16_t y;
+}
+zVector2ui_t;
+
 typedef struct zVector4i_t
 {
   int16_t x;

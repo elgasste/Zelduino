@@ -11,7 +11,11 @@ void zGame_Init()
 {
   zGame_LoadData();
 
-  // TODO: this should be part of data_loaderc at some point
+  // TODO: this should be part of data_loader.c at some point
+  zGame.worldCoords.x = 1;
+  zGame.worldCoords.y = 0;
+  zGame_LoadWorldMap();
+
   zGame.playerHitBox.x = ( ( WORLD_TILES_X / 2 ) - 3 ) * WORLD_TILE_SIZE;
   zGame.playerHitBox.y = ( WORLD_TILES_Y / 2 ) * WORLD_TILE_SIZE;
   zGame.playerHitBox.w = 12;

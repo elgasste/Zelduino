@@ -5,6 +5,11 @@ zBool zVector2i_Equals( zVector2i_t* v1, zVector2i_t* v2 )
   return ( v1->x == v2->x && v1->y == v2->y ) ? zTrue : zFalse;
 }
 
+zBool zVector2ui_Equals( zVector2ui_t* v1, zVector2ui_t* v2 )
+{
+  return ( v1->x == v2->x && v1->y == v2->y ) ? zTrue : zFalse;
+}
+
 zBool zVector4i_Equals( zVector4i_t* v1, zVector4i_t* v2 )
 {
   return ( v1->x == v2->x && v1->y == v2->y && v1->w == v2->w && v1->h == v2->h ) ? zTrue : zFalse;
