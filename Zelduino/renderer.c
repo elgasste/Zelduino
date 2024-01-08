@@ -57,16 +57,7 @@ static void zRenderer_RenderPlayingState()
   {
     zRenderer.gameStateCache = zGame.state;
     zRenderer.worldCoordsCache = zGame.worldCoords;
-
-    for( int row = 0; row < WORLD_TILES_Y; row++ )
-    {
-      for( int col = 0; col < WORLD_TILES_X; col++ )
-      {
-        zLcdScreen_DrawWorldTile( &( zGame.worldTiles[zMath_WorldIndexFromCoords( row, col )] ),
-                                  zRenderer.worldScreenOffset.x + ( col * WORLD_TILE_SIZE ),
-                                  zRenderer.worldScreenOffset.y + ( row * WORLD_TILE_SIZE ) );
-      }
-    }
+    zLcdScreen_DrawWorld( zRenderer.worldScreenOffset.x, zRenderer.worldScreenOffset.y );
   }
 
   if ( redrawAll || !zVector4i_Equals( &zRenderer.playerHitBoxCache, &zGame.playerHitBox ) )
