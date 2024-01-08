@@ -176,7 +176,7 @@ void LoadTextTextureMap( BitmapSource bitmap )
 
             if ( !Color.AreClose( pixelColor, Color.FromArgb( 255, 0, 0, 0 ) ) )
             {
-               _textTextureMap[_textTextureMap.Count - 1] |= (byte)( 1 << ( 8 - i ) );
+               _textTextureMap[_textTextureMap.Count - 1] |= (byte)( 1 << ( 8 - i - 1 ) );
             }
          }
       }

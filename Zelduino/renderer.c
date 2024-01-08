@@ -133,5 +133,8 @@ static void zRenderer_RenderInventoryState()
                          WORLD_TILES_X * WORLD_TILE_SIZE,
                          WORLD_TILES_Y * WORLD_TILE_SIZE,
                          0x0000 );
+
+    // MUFFINS: make sure this works, then show a string somewhere in the renderer
+    zLcdScreen_DrawText( "abcdefghijklmnopqrstuvwxyz", zRenderer.worldScreenOffset.x, zRenderer.worldScreenOffset.y, 0x1111, 0xAAAA );
   }
 }
