@@ -55,6 +55,7 @@ extern "C" {
 void zLcdScreen_Init( uint8_t cs, uint8_t cd, uint8_t wr, uint8_t rd, uint8_t reset );
 void zLcdScreen_FillRect( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color );
 void zLcdScreen_DrawText( const char* text, int16_t x, int16_t y, uint16_t background, uint16_t foreground );
+void zLcdScreen_DrawWorld( int16_t x, int16_t y );
 void zLcdScreen_DrawWorldTile( zWorldTile_t* tile, int16_t x, int16_t y );
 void zLcdScreen_DrawPlayerSprite( int16_t x, int16_t y );
 

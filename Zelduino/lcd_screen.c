@@ -188,12 +188,41 @@ void zLcdScreen_DrawText( const char* text, int16_t x, int16_t y, uint16_t backg
   }
 }
 
+void zLcdScreen_DrawWorld( int16_t x, int16_t y )
+{
+  zLcdScreen_SetAddrWindow( x, y, x + ( WORLD_TILE_SIZE * WORLD_TILES_X ) - 1, y + ( WORLD_TILE_SIZE * WORLD_TILES_Y ) - 1 );
+  CS_ACTIVE;
+  writeCmd8( zLcdScreen.CC );
+
+  int packedTileSize = WORLD_TILE_SIZE / 2;
+
+  for ( int pixelRow = 0; pixelRow < WORLD_TILE_SIZE * WORLD_TILES_Y; pixelRow++ )
+  {
+    int pixelRowOffset = ( ( pixelRow / WORLD_TILE_SIZE ) * WORLD_TILES_X );
+
+    for ( int tileCol = 0; tileCol < WORLD_TILES_X; tileCol++ )
+    {
+      int tileIndex = pixelRowOffset + tileCol;
+      int pixelOffsetY = pixelRow % WORLD_TILE_SIZE;
+      int textureOffset = zGame.worldTiles[tileIndex].textureIndex * packedTileSize;
+      int textureRowOffset = ( pixelOffsetY * ( packedTileSize * WORLD_TILE_TEXTURES ) );
+
+      for ( int col = textureOffset; col < textureOffset + packedTileSize; col++ )
+      {
+        uint8_t texturePair = zGame.worldTextureMap[textureRowOffset + col];
+        writeData16( zGame.palette[texturePair >> 4] );
+        writeData16( zGame.palette[texturePair & 0xF] );
+      }
+    }
+  }
+
+  CS_IDLE;
+}
+
 void zLcdScreen_DrawWorldTile( zWorldTile_t* tile, int16_t x, int16_t y )
 {
   zLcdScreen_SetAddrWindow( x, y, x + WORLD_TILE_SIZE - 1, y + WORLD_TILE_SIZE - 1 );
-
 	CS_ACTIVE;
-
 	writeCmd8( zLcdScreen.CC );
 
   int textureOffset = tile->textureIndex * ( WORLD_TILE_SIZE / 2 );
@@ -203,7 +232,6 @@ void zLcdScreen_DrawWorldTile( zWorldTile_t* tile, int16_t x, int16_t y )
     for( uint16_t col = textureOffset; col < textureOffset + ( WORLD_TILE_SIZE / 2 ); col++ )
     {
       uint8_t texturePair = zGame.worldTextureMap[( row * ( ( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_TEXTURES ) ) + col];
-
       writeData16( zGame.palette[texturePair >> 4] );
       writeData16( zGame.palette[texturePair & 0xF] );
     }
