@@ -19,6 +19,9 @@
 #define PALETTE_COLORS      16
 #define TRANSPARENT_COLOR   0xF81F
 
+#define TEXT_TILE_SIZE      8
+#define TEXT_TILES          36
+
 #define WORLD_TILE_SIZE     16
 #define WORLD_TILES_X       16
 #define WORLD_TILES_Y       11

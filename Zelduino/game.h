@@ -19,9 +19,10 @@ zCollisionTile_t;
 
 typedef struct zGame_t
 {
-  // TODO: should this stuff be in renderer.h? or graphics.h or something?
+  // TODO: should this stuff be in its own palette/texture mapping header?
   uint16_t palette[PALETTE_COLORS];
   
+  uint8_t textTextureMap[( TEXT_TILE_SIZE / 8 ) * TEXT_TILE_SIZE * TEXT_TILES];
   uint8_t worldTextureMap[( WORLD_TILE_SIZE / 2 ) * WORLD_TILE_SIZE * WORLD_TILE_TEXTURES];
   uint8_t playerTextureMap[( PLAYER_SPRITE_SIZE / 2 ) * PLAYER_SPRITE_SIZE * PLAYER_SPRITE_FRAMES * 4];
 

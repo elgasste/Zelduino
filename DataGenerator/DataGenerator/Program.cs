@@ -86,7 +86,8 @@ int[] _collisionMapPassable1 =
    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 };
 
-var _palette = new List<UInt16>();
+var _palette = new List<ushort>();
+var _textTextureMap = new List<byte>();
 var _worldTextureMap = new List<byte>();
 var _playerTextureMap = new List<byte>();
 
@@ -112,29 +113,29 @@ void BitmapSanityCheck( BitmapSource bitmap )
    }
 }
 
-static UInt16 ColortoUInt16( Color color )
+static ushort ColortoUInt16( Color color )
 {
-   var r16 = (UInt16)( ( color.R / 255.0 ) * 31 );
-   var g16 = (UInt16)( ( color.G / 255.0 ) * 63 );
-   var b16 = (UInt16)( ( color.B / 255.0 ) * 31 );
+   var r16 = (ushort)( ( color.R / 255.0 ) * 31 );
+   var g16 = (ushort)( ( color.G / 255.0 ) * 63 );
+   var b16 = (ushort)( ( color.B / 255.0 ) * 31 );
 
-   return (UInt16)( ( r16 << 11 ) | ( g16 << 5 ) | b16 );
+   return (ushort)( ( r16 << 11 ) | ( g16 << 5 ) | b16 );
 }
 
-static UInt16 GetPixelColor( BitmapSource bitmap, int x, int y )
+static Color GetPixelColor( BitmapSource bitmap, int x, int y )
 {
-   var bytesPerPixel = (int)Math.Truncate( ( bitmap.Format.BitsPerPixel + 7.0) / 8.0);
+   var bytesPerPixel = (int)Math.Truncate( ( bitmap.Format.BitsPerPixel + 7.0 ) / 8.0 );
    int stride = bitmap.PixelWidth * bytesPerPixel;
    byte[] pixel = new byte[1];
    var rect = new Int32Rect( x, y, 1, 1 );
 
    bitmap.CopyPixels( rect, pixel, stride, 0 );
-   var color = bitmap.Palette.Colors[pixel[0]];
-
-   return ColortoUInt16( color );
+   return bitmap.Palette.Colors[pixel[0]];
 }
 
-int PaletteIndexFromColor( UInt16 color )
+static ushort GetPixelColor16( BitmapSource bitmap, int x, int y ) => ColortoUInt16( GetPixelColor( bitmap, x, y ) );
+
+int PaletteIndexFromColor( ushort color )
 {
    if ( _palette is null )
    {
@@ -156,6 +157,32 @@ int PaletteIndexFromColor( UInt16 color )
    return paletteIndex;
 }
 
+void LoadTextTextureMap( BitmapSource bitmap )
+{
+   if ( _textTextureMap is null )
+   {
+      throw new Exception( "Somehow the text texture map is null, no idea how it happened." );
+   }
+
+   for ( int row = 0; row < bitmap.PixelHeight; row++ )
+   {
+      for ( int col = 0; col < bitmap.PixelWidth; col += 8 )
+      {
+         _textTextureMap.Add( 0x00 );
+
+         for ( int i = 0; i < 8; i++ )
+         {
+            var pixelColor = GetPixelColor( bitmap, col + i, row );
+
+            if ( !Color.AreClose( pixelColor, Color.FromArgb( 255, 0, 0, 0 ) ) )
+            {
+               _textTextureMap[_textTextureMap.Count - 1] |= (byte)( 1 << ( 8 - i ) );
+            }
+         }
+      }
+   }
+}
+
 void LoadWorldTextureMap( BitmapSource bitmap )
 {
    if ( _worldTextureMap is null )
@@ -168,7 +195,7 @@ void LoadWorldTextureMap( BitmapSource bitmap )
    {
       for ( int col = 0; col < bitmap.PixelWidth; col++ )
       {
-         var pixelColor = GetPixelColor( bitmap, col, row );
+         var pixelColor = GetPixelColor16( bitmap, col, row );
          _worldTextureMap.Add( (byte)PaletteIndexFromColor( pixelColor ) );
       }
    }
@@ -185,7 +212,7 @@ void LoadPlayerTextureMap( BitmapSource bitmap )
    {
       for ( int col = 0; col < bitmap.PixelWidth; col++ )
       {
-         var pixelColor = GetPixelColor( bitmap, col, row );
+         var pixelColor = GetPixelColor16( bitmap, col, row );
          _playerTextureMap.Add( (byte)PaletteIndexFromColor( pixelColor ) );
       }
    }
@@ -196,6 +223,10 @@ string BuildPaletteAndTexturesOutputString()
    if ( _palette is null )
    {
       throw new Exception( "Somehow the palette is null, I have no idea what could have happened." );
+   }
+   else if ( _textTextureMap is null )
+   {
+      throw new Exception( "Somehow the text texture map is null, I have no idea what went wrong." );
    }
    else if ( _worldTextureMap is null )
    {
@@ -218,6 +249,13 @@ string BuildPaletteAndTexturesOutputString()
       {
          outputString += string.Format( "  zGame.palette[{0}] = 0x0000;\n", i );
       }
+   }
+
+   outputString += "\n";
+
+   for ( int i = 0; i < _textTextureMap.Count; i++ )
+   {
+      outputString += string.Format( "  zGame.textTextureMap[{0}] = 0x{1};\n", i, _textTextureMap[i].ToString( "X2" ) );
    }
 
    outputString += "\n";
@@ -246,6 +284,12 @@ string BuildPaletteAndTexturesOutputString()
 
 string GenerateTextureMaps()
 {
+   var textFileStream = new FileStream( "text_texture_map.png", FileMode.Open, FileAccess.Read, FileShare.Read );
+   var textDecoder = new PngBitmapDecoder( textFileStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default );
+   BitmapSource textBitmap = textDecoder.Frames[0];
+   BitmapSanityCheck( textBitmap );
+   LoadTextTextureMap( textBitmap );
+
    var worldFileStream = new FileStream( "world_texture_map.png", FileMode.Open, FileAccess.Read, FileShare.Read );
    var worldDecoder = new PngBitmapDecoder( worldFileStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default );
    BitmapSource worldBitmap = worldDecoder.Frames[0];

@@ -15,6 +15,9 @@
     <None Update="texture_map.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="text_texture_map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="world_texture_map.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
