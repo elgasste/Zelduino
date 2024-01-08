@@ -6,8 +6,9 @@
 #define SCREEN_WIDTH        320
 #define SCREEN_HEIGHT       480
 
-#define PIN_ANALOG_X        A8
-#define PIN_ANALOG_Y        A9
+#define PIN_ANALOG_X        A9
+#define PIN_ANALOG_Y        A8
+
 #define PIN_SELECT_BUTTON   52
 #define PIN_START_BUTTON    50
 #define PIN_A_BUTTON        46
