@@ -5,6 +5,7 @@
 #include "player_sprite.h"
 
 static void zGame_HandlePlayingStateInput();
+static void zGame_HandleInventoryStateInput();
 static void zGame_MovePlayer();
 
 void zGame_Init()
@@ -43,6 +44,9 @@ void zGame_Update()
       zGame_HandlePlayingStateInput();
       zPhysics_MovePlayer();
       break;
+    case zGameState_Inventory:
+      zGame_HandleInventoryStateInput();
+      break;
   }
 
   zGame.playerVelocity.x = 0;
@@ -52,6 +56,12 @@ void zGame_Update()
 // TODO: move this into an input handler file?
 static void zGame_HandlePlayingStateInput()
 {
+  if ( zButtonStates[zButtonType_Start].pressed )
+  {
+    zGame.state = zGameState_Inventory;
+    return;
+  }
+
   zBool leftIsDown = zButtonStates[zButtonType_Left].down;
   zBool upIsDown = zButtonStates[zButtonType_Up].down;
   zBool rightIsDown = zButtonStates[zButtonType_Right].down;
@@ -117,5 +127,15 @@ static void zGame_HandlePlayingStateInput()
     {
       zGame.playerVelocity.y *= 0.707;
     }
+  }
+}
+
+// TODO: move this to an input handler file?
+static void zGame_HandleInventoryStateInput()
+{
+  if ( zButtonStates[zButtonType_Start].pressed )
+  {
+    zGame.state = zGameState_Playing;
+    return;
   }
 }

@@ -18,6 +18,7 @@ static void zLcdScreen_SetRotation( uint8_t r );
 static void zLcdScreen_SetAddrWindow( int16_t x1, int16_t y1, int16_t x2, int16_t y2 );
 static void zLcdScreen_VertScroll( int16_t top, int16_t scrollines, int16_t offset );
 static void zLcdScreen_InvertDisplay( bool i );
+static int zLcdScreen_GetCharIndexFromChar( const char ch );
 static uint16_t zLcdScreen_GetWorldPixelColor( int16_t x, int16_t y );
 
 void zLcdScreen_Init( uint8_t cs, uint8_t cd, uint8_t wr, uint8_t rd, uint8_t reset )
@@ -143,6 +144,48 @@ void zLcdScreen_FillRect( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t c
 	}
 
 	CS_IDLE;
+}
+
+void zLcdScreen_DrawText( const char* text, int16_t x, int16_t y, uint16_t background, uint16_t foreground )
+{
+  for( int ch = 0; ch < strlen( text ); ch++ )
+  {
+    zLcdScreen_SetAddrWindow( x, y, x + TEXT_TILE_SIZE - 1, y + TEXT_TILE_SIZE - 1 );
+    CS_ACTIVE;
+    writeCmd8( zLcdScreen.CC );
+
+    int charIndex = zLcdScreen_GetCharIndexFromChar( text[ch] );
+
+    if ( charIndex < 0 )
+    {
+      for ( int i = 0; i < TEXT_TILE_SIZE * TEXT_TILE_SIZE; i++ )
+      {
+        writeData16( background );
+      }
+    }
+    else
+    {
+      for( int row = 0; row < TEXT_TILE_SIZE; row++ )
+      {
+        uint8_t bits = zGame.textTextureMap[( row * TEXT_TILES ) + charIndex];
+
+        for( int bit = 0; bit < 8; bit++ )
+        {
+          if ( bits & ( 0x01 << ( TEXT_TILE_SIZE - bit - 1 ) ) )
+          {
+            writeData16( foreground );
+          }
+          else
+          {
+            writeData16( background );
+          }
+        }
+      }
+    }
+
+    CS_IDLE;
+    x += TEXT_TILE_SIZE;
+  }
 }
 
 void zLcdScreen_DrawWorldTile( zWorldTile_t* tile, int16_t x, int16_t y )
@@ -425,6 +468,24 @@ static void zLcdScreen_InvertDisplay( bool i )
 	uint8_t val = zLcdScreen.VL ^ i;
 	writeCmd8( val ? 0x21 : 0x20 );
 	CS_IDLE;
+}
+
+static int zLcdScreen_GetCharIndexFromChar( const char ch )
+{
+  if ( ch >= 97 && ch <= 122 )
+  {
+    // a - z (lower case)
+    return ch - 97;
+  }
+  else if ( ch >= 48 && ch <= 57 )
+  {
+    // 0 - 9 (numbers start at 26 in our table)
+    return ch - 22;
+  }
+  else
+  {
+    return -1;
+  }
 }
 
 static uint16_t zLcdScreen_GetWorldPixelColor( int16_t x, int16_t y )

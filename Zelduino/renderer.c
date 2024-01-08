@@ -5,11 +5,14 @@
 
 static void zRenderer_RenderLoadingState();
 static void zRenderer_RenderPlayingState();
+static void zRenderer_RenderInventoryState();
 static void zRenderer_RedrawDirtyTiles();
 
 void zRenderer_Init()
 {
   zLcdScreen_Init( A3, A2, A1, A0, A4 );
+
+  zRenderer.gameStateCache = zGame.state;
 
   zRenderer.worldScreenOffset.x = WORLD_OFFSET_X;
   zRenderer.worldScreenOffset.y = WORLD_OFFSET_Y;
@@ -34,6 +37,9 @@ void zRenderer_Render()
     case zGameState_Playing:
       zRenderer_RenderPlayingState();
       break;
+    case zGameState_Inventory:
+      zRenderer_RenderInventoryState();
+      break;
   }
 }
 
@@ -44,9 +50,12 @@ static void zRenderer_RenderLoadingState()
 
 static void zRenderer_RenderPlayingState()
 {
+  zBool redrawAll = zRenderer.gameStateCache != zGame.state;
+
   // this is VERY slow, so only do it when absolutely necessary
-  if ( !zVector2ui_Equals( &( zRenderer.worldCoordsCache ), &( zGame.worldCoords ) ) )
+  if ( redrawAll || ( !zVector2ui_Equals( &( zRenderer.worldCoordsCache ), &( zGame.worldCoords ) ) ) )
   {
+    zRenderer.gameStateCache = zGame.state;
     zRenderer.worldCoordsCache = zGame.worldCoords;
 
     for( int row = 0; row < WORLD_TILES_Y; row++ )
@@ -60,10 +69,13 @@ static void zRenderer_RenderPlayingState()
     }
   }
 
-  if ( !zVector4i_Equals( &zRenderer.playerHitBoxCache, &zGame.playerHitBox ) )
+  if ( redrawAll || !zVector4i_Equals( &zRenderer.playerHitBoxCache, &zGame.playerHitBox ) )
   {
-    // cover up the player's previous position
-    zRenderer_RedrawDirtyTiles();
+    // cover up the player's previous position (unless we've already done it)
+    if ( !redrawAll )
+    {
+      zRenderer_RedrawDirtyTiles();
+    }
 
     // now draw the player at the new position
     zLcdScreen_DrawPlayerSprite( zRenderer.worldScreenOffset.x + zGame.playerHitBox.x + zGame.playerSpriteOffset.x,
@@ -107,5 +119,25 @@ static void zRenderer_RedrawDirtyTiles()
                                 zRenderer.worldScreenOffset.x + ( col * WORLD_TILE_SIZE ),
                                 zRenderer.worldScreenOffset.y + ( row * WORLD_TILE_SIZE ) );
     }
+  }
+}
+
+static void zRenderer_RenderInventoryState()
+{
+  if ( zRenderer.gameStateCache != zGame.state )
+  {
+    zRenderer.gameStateCache = zGame.state;
+
+    zLcdScreen_FillRect( zRenderer.worldScreenOffset.x,
+                         zRenderer.worldScreenOffset.y,
+                         WORLD_TILES_X * WORLD_TILE_SIZE,
+                         WORLD_TILES_Y * WORLD_TILE_SIZE,
+                         0x0000 );
+
+    zLcdScreen_DrawText( "press start to resume",
+                         zRenderer.worldScreenOffset.x + 44,
+                         zRenderer.worldScreenOffset.y + 84,
+                         0x0000,
+                         0xFFFF );
   }
 }

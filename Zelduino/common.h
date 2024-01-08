@@ -6,8 +6,9 @@
 #define SCREEN_WIDTH        320
 #define SCREEN_HEIGHT       480
 
-#define PIN_ANALOG_X        A8
-#define PIN_ANALOG_Y        A9
+#define PIN_ANALOG_X        A9
+#define PIN_ANALOG_Y        A8
+
 #define PIN_SELECT_BUTTON   52
 #define PIN_START_BUTTON    50
 #define PIN_A_BUTTON        46
@@ -17,6 +18,9 @@
 
 #define PALETTE_COLORS      16
 #define TRANSPARENT_COLOR   0xF81F
+
+#define TEXT_TILE_SIZE      8
+#define TEXT_TILES          36
 
 #define WORLD_TILE_SIZE     16
 #define WORLD_TILES_X       16

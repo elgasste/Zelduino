@@ -27,9 +27,9 @@ void zInputReader_ReadInput()
   int xValue = analogRead( PIN_ANALOG_X );
   int yValue = analogRead( PIN_ANALOG_Y );
 
-  zInputReader_UpdateButtonState( &( zButtonStates[zButtonType_Left ] ), xValue < ANALOG_THRESHOLD_LOW );
+  zInputReader_UpdateButtonState( &( zButtonStates[zButtonType_Left ] ), xValue > ANALOG_THRESHOLD_HIGH );
   zInputReader_UpdateButtonState( &( zButtonStates[zButtonType_Up ] ), yValue < ANALOG_THRESHOLD_LOW );
-  zInputReader_UpdateButtonState( &( zButtonStates[zButtonType_Right ] ), xValue > ANALOG_THRESHOLD_HIGH );
+  zInputReader_UpdateButtonState( &( zButtonStates[zButtonType_Right ] ), xValue < ANALOG_THRESHOLD_LOW );
   zInputReader_UpdateButtonState( &( zButtonStates[zButtonType_Down ] ), yValue > ANALOG_THRESHOLD_HIGH );
 
   zInputReader_UpdateButtonState( &( zButtonStates[zButtonType_Select] ), digitalRead( PIN_SELECT_BUTTON ) == LOW );
