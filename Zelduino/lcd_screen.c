@@ -340,15 +340,15 @@ static void zLcdScreen_Start()
 
 	zLcdScreen.lcd_driver = ID_9486;
 
-	zLcdScreen.XC=ILI9341_COLADDRSET;
-  zLcdScreen.YC=ILI9341_PAGEADDRSET;
-  zLcdScreen.CC=ILI9341_MEMORYWRITE;
-  zLcdScreen.RC=HX8357_RAMRD;
-  zLcdScreen.SC1=0x33;
-  zLcdScreen.SC2=0x37;
-  zLcdScreen.MD=ILI9341_MADCTL;
-  zLcdScreen.VL=0;
-  zLcdScreen.R24BIT=0;
+	zLcdScreen.XC = ILI9341_COLADDRSET;
+  zLcdScreen.YC = ILI9341_PAGEADDRSET;
+  zLcdScreen.CC = ILI9341_MEMORYWRITE;
+  zLcdScreen.RC = HX8357_RAMRD;
+  zLcdScreen.SC1 = 0x33;
+  zLcdScreen.SC2 = 0x37;
+  zLcdScreen.MD = ILI9341_MADCTL;
+  zLcdScreen.VL = 0;
+  zLcdScreen.R24BIT = 0;
 
   static const uint8_t ILI9486_regValues[] PROGMEM = 
   {
